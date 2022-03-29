@@ -1,0 +1,29 @@
+{
+  "name": "gaosen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/gao_sen_g/gaosen.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vuepress-plugin-ribbon": "^1.1.2",
+    "vuepress-theme-reco": "^1.6.11"
+  },
+  "dependencies": {
+    "@vuepress-reco/vuepress-plugin-bgm-player": "^1.1.4",
+    "@vuepress-reco/vuepress-plugin-loading-page": "^1.6.0",
+    "@vuepress-yard/vuepress-plugin-loading-page-specially": "^1.0.2",
+    "jquery": "^3.6.0",
+    "vuepress-plugin-auto-sidebar": "^2.3.2",
+    "vuepress-plugin-player": "^1.1.8"
+  }
+}
