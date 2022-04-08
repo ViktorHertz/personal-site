@@ -1,0 +1,315 @@
+---
+sidebar: auto
+---
+
+​```mermaid
+flowchat
+st=>start: Start:>http://www.google.com[blank]
+e=>end:>http://www.google.com
+op1=>operation: My Operation
+sub1=>subroutine: My Subroutine
+cond=>condition: Yes
+or No?:>http://www.google.com
+io=>inputoutput: catch something...
+para=>parallel: parallel tasks
+
+st->op1->cond
+cond(yes)->io->e
+cond(no)->para
+para(path1, bottom)->sub1(right)->op1
+para(path2, top)->op1
+
+
+## Install
+
+```bash
+yarn add vuepress-plugin-flowchart -D
+```
+
+> Note that this plugin requires VuePress >= 1.0.0, for now you can try it via `yarn install vuepress@next -D`
+
+## Usage
+
+```js
+// .vuepress/config.js
+module.exports = {
+  plugins: [
+    'flowchart'
+  ]
+}
+```
+
+## Syntax
+
+```markdown
+​```mermaid
+flowchat [preset]
+
+<!-- Your flowchart code here. -->
+
+
+```
+
+`vuepress-plugin-flowchart` leverages [flowchart.js](https://github.com/adrai/flowchart.js) under the hook.
+
+Available presets for now:
+
+- `vue` (default)
+- `ant`
+
+View the current available preset [here](https://github.com/ulivz/vuepress-plugin-flowchart/tree/master/lib/presets), feel free to submit your own preset. : )
+
+### Start & End
+
+- `[Variable]->start: [Text]`
+- `[Variable]->end: [Text]`
+
+```markdown
+​```mermaid
+flowchat
+st=>start: Start
+e=>end: End
+
+st->e
+
+```
+
+​```mermaid
+flowchat
+st=>start: Start
+e=>end: End
+
+st->e
+
+
+### Operation
+
+- `[Variable]->operation: [Text]`
+
+```markdown
+​```mermaid
+flowchat
+process=>operation: Operation
+e=>end: End
+
+process->e
+
+```
+
+​```mermaid
+flowchat
+process=>operation: Operation
+e=>end: End
+
+process->e
+
+
+
+### Inputoutput
+
+- `[Variable]->inputoutput: [Text]`
+
+```markdown
+​```mermaid
+flowchat
+process=>inputoutput: Inputoutput
+e=>end: End
+
+process->e
+
+```
+
+​```mermaid
+flowchat
+process=>inputoutput: Inputoutput
+e=>end: End
+
+process->e
+
+
+
+### Subroutine
+
+- `[Variable]->subroutine: [Text]`
+
+```markdown
+​```mermaid
+flowchat
+process=>subroutine: Subroutine
+e=>end: End
+
+process->e
+
+```
+
+​```mermaid
+flowchat
+process=>subroutine: Subroutine
+e=>end: End
+
+process->e
+
+
+
+### Condition
+
+- `[Variable]->condition: [Text]`
+- `[Variable]([yesText])->[Position]`
+- `[Variable]([noText])->[Position]`
+
+```markdown
+​```mermaid
+flowchat
+cond=>condition: Process?
+process=>operation: Process
+e=>end: End
+
+cond(yes)->process->e
+cond(no)->e
+
+```
+
+​```mermaid
+flowchat
+cond=>condition: Process?
+process=>operation: Process
+e=>end: End
+
+cond(yes)->process->e
+cond(no)->e
+
+
+
+### Parallel
+
+- `[Variable]->parallel: [Text]`
+- `[Variable](path1, direction)->[Position]`
+- `[Variable](path1, direction)->[Position]`
+
+```markdown
+​```mermaid
+flowchat
+para=>parallel: parallel tasks
+process=>operation: Process
+e=>end: End
+
+para(path1, bottom)->process->e
+para(path2)->e
+
+```
+
+​```mermaid
+flowchat
+para=>parallel: parallel tasks
+process=>operation: Process
+e=>end: End
+
+para(path1, bottom)->process->e
+para(path2)->e
+
+
+## Showcase
+
+### #1 Ordinary process
+
+```md
+​```mermaid
+flowchat
+stage1=>operation: Stage 1
+stage2=>operation: Stage 2
+stage3=>operation: Stage 3
+
+stage1->stage2->stage3
+
+```
+
+​```mermaid
+flowchat
+stage1=>operation: Stage 1
+stage2=>operation: Stage 2
+stage3=>operation: Stage 3
+
+stage1->stage2->stage3
+
+
+### #2 Complex process
+
+```md
+​```mermaid
+flowchat
+st=>start: Start|past:>http://www.google.com[blank]
+e=>end: End|future:>http://www.google.com
+op1=>operation: My Operation|past
+op2=>operation: Stuff|current
+sub1=>subroutine: My Subroutine|invalid
+cond=>condition: Yes
+or No?|approved:>http://www.google.com
+c2=>condition: Good idea|rejected
+io=>inputoutput: catch something...|future
+
+st->op1(right)->cond
+cond(yes, right)->c2
+cond(no)->sub1(left)->op1
+c2(yes)->io->e
+c2(no)->op2->e
+
+```
+
+​```mermaid
+flowchat
+st=>start: Start|past:>http://www.google.com[blank]
+e=>end: End|future:>http://www.google.com
+op1=>operation: My Operation|past
+op2=>operation: Stuff|current
+sub1=>subroutine: My Subroutine|invalid
+cond=>condition: Yes
+or No?|approved:>http://www.google.com
+c2=>condition: Good idea|rejected
+io=>inputoutput: catch something...|future
+
+st->op1(right)->cond
+cond(yes, right)->c2
+cond(no)->sub1(left)->op1
+c2(yes)->io->e
+c2(no)->op2->e
+
+
+### #3 Ant Preset
+
+```markdown
+​```mermaid
+flowchat ant
+st=>start: Start:>http://www.google.com[blank]
+e=>end:>http://www.google.com
+op1=>operation: My Operation
+sub1=>subroutine: My Subroutine
+cond=>condition: Yes
+or No?:>http://www.google.com
+io=>inputoutput: catch something...
+para=>parallel: parallel tasks
+
+st->op1->cond
+cond(yes)->io->e
+cond(no)->para
+para(path1, bottom)->sub1(right)->op1
+para(path2, top)->op1
+
+```
+
+​```mermaid
+flowchat ant
+st=>start: Start:>http://www.google.com[blank]
+e=>end:>http://www.google.com
+op1=>operation: My Operation
+sub1=>subroutine: My Subroutine
+cond=>condition: Yes
+or No?:>http://www.google.com
+io=>inputoutput: catch something...
+para=>parallel: parallel tasks
+
+st->op1->cond
+cond(yes)->io->e
+cond(no)->para
+para(path1, bottom)->sub1(right)->op1
+para(path2, top)->op1
+

@@ -1,12 +1,20 @@
 module.exports = [
+  {text: '专业实验', link: '/curriculum/', icon: 'reco-api'},
   {
-    text: '学习指南', link: '/guide/'
+    text: '求学之路', link: '/learning/', icon: 'reco-blog',
+    items: [
+      {text: '前端', link: '/learning/frontEnd/'},
+      {text: 'demo', link: '/learning/demo/'}
+    ]
   },
   {
-    text: '近期规划', link: '/baodian/',
+    text: '关于我', link: '/about/'
+  },
+  {
+    text: '测试中', link: '/baodian/',
     items: [
-      {text: '初级开发篇', link: '/baodian/zero/'},
-      {text: '中高进阶篇', link: '/baodian/high/'},
+      {text: '测试中', link: '/baodian/zero/'},
+      {text: '测试中', link: '/baodian/high/'},
     ]
   },
   {

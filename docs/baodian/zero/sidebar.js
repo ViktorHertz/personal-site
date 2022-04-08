@@ -1,13 +1,14 @@
 module.exports = [
   {
-    title:'初级宝典一',
+    title:'短篇故事',
     collapsable: true,
     children:[
       '/baodian/zero/notes/bd1',
+      '/baodian/zero/notes/demo0',
     ]
   },
   {
-    title:'初级宝典二',
+    title:'长篇故事',
     collapsable: true,
     children:[
       '/baodian/zero/notes/bd2',

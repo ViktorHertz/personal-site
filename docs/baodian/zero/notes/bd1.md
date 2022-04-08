@@ -22,6 +22,3 @@ publish: false
 香气四溢。不是自夸,这个鸭腿比采蝶轩的好很多哦这么容易得来的好东东,以后要多做,下次要做整只鸭子,要吃多多的脆皮!
 :::
 ![一张图片](/img/avatar.png)
-
-
-<Vssue title="Vssue Demo" />
