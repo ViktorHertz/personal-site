@@ -11,7 +11,7 @@
 
 git init
 git add -A
-git commit -m '添加了一些博客（主要有关专业实验）、新增了一些插件、'
+git commit -m '中国象棋1.0竣工！'
 
 git config --global user.name "gao_sen_g"
 git config --global user.email "2322134363@qq.com"

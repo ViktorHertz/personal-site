@@ -1,22 +1,16 @@
 <template>
   <div>
-    <div id="y">初始化FEN串：rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR</div>
-    <button @click="btnClick2" class="f1">调试按钮</button>
-    <button class="f1" @click="initBoard">remake</button>
-    <br>
-    <br>
-    <div class="input-box">
-      <i class="iconfont reco-douyin"></i>
-      <input type="text" placeholder="输入曲子，以'/'分隔" v-model="userInput">
-      <div @click="sureInput">确定</div>
-    </div>
-    <br>
-<!--    <div id="test">{{test}}</div>-->
     <div class="chessBoard">
+
       <div class="imgBox myImgBox" v-for="(item,index) in 90">
         <img :src="$withBase(`/img/chess/K_.png`)" :id="`pos${index}`" alt="一个棋子" :key="index">
       </div>
+      <div class="myFontBox">
+        <div class="css2ebd673af7243b7">楚河</div>
+        <div class="css2ebd673af7243b7">汉界</div>
+      </div>
     </div>
+
   </div>
 </template>
 
@@ -106,7 +100,7 @@ export default {
       handler(val, oldVal) {
         // console.log('监听到有变化,新旧value：' + oldVal + '\n' + newVal);
         // console.log(newVal);
-        this.test = val
+        this.displayChessTemp = val
         // console.log(val);
         let start = this.COORD_XY(3, 3) //51,循环开始处
         let end = this.COORD_XY(11, 12) //203，循环结束处
@@ -186,6 +180,11 @@ export default {
     }
   },
   mounted() {
+    const css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'http://cdn.repository.webfont.com/webfonts/nomal/148407/46489/625407aaf629d81300ac19b3.css';
+    document.body.appendChild(css);
+
     this.initBoard()
     /*每个img绑定一个点击事件*/
     document.querySelectorAll('div.imgBox img').forEach((e, index) => {
@@ -619,7 +618,6 @@ export default {
     background-color: #cacbcd;
   }
 }
-
 .f1 {
   margin: 0 5px;
   border: none;
@@ -631,32 +629,34 @@ export default {
   cursor: pointer;
   font-weight: 600;
 }
-
 .f1:hover {
   background-color: #12609b;
 }
-
-.x {
-  width: 100px;
-  height: 100px;
-  background: url("../public/img/chess/bc.png");
-  background-size: 100%;
-  //background-repeat: no-repeat;
-}
-
 .chessBoard {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 70%;
-  padding: 5px;
+  width: 65%;
+  padding: 0.2vw;
   border: 2px solid black;
   box-sizing: border-box;
-
+  position: relative;
+  .myFontBox {
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    transform: translateX(-50%);
+    font-size: 3vw;
+    div {
+    }
+  }
   .imgBox {
     width: 11.1%;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 0.2vw;
     //border: 1px solid black;
     background: url("../public/img/chess/bc.png");
     background-size: 100%;
@@ -674,12 +674,32 @@ export default {
 
   :nth-child(n+37):nth-child(-n+54) {
     //border: none;
-    background: none;
-
+    //background: none;
+    //background-image: url("../public/img/chess/bc-down.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    //margin: 10px 0;
+    //padding: 0;
+    //display: flex;
+    //justify-content: center;
+    //align-items: center;
     img {
-      cursor: default;
+      //cursor: default;
+      //width: 80%;
+
     }
   }
-
+  :nth-child(n+37):nth-child(-n+45) {
+    margin: -10px 0 10px 0;
+    background-image: url('../public/img/chess/bc-up.png');
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+  :nth-child(n+46):nth-child(-n+54) {
+    background-image: url('../public/img/chess/bc-down.png');
+    margin: 10px 0 -10px 0;
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
 }
 </style>
