@@ -8,4 +8,4 @@ categories:
  - 专业实验
 ---
 
-<Chess1 />
+<Chess2 />

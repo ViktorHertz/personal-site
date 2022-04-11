@@ -11,6 +11,7 @@
       <div @click="sureInput">确定</div>
     </div>
     <br>
+<!--    <div id="test">{{test}}</div>-->
     <div class="chessBoard">
       <div class="imgBox myImgBox" v-for="(item,index) in 90">
         <img :src="$withBase(`/img/chess/K_.png`)" :id="`pos${index}`" alt="一个棋子" :key="index">
@@ -21,10 +22,35 @@
 
 <script>
 import $ from 'jquery'
+
 export default {
   name: "Chess",
+  props: {
+    displayChess: {
+      type: Array,
+      default: [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,//3
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+        0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,//12
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      ],
+    }
+  },
   data() {
     return {
+      test: [],
       IN_BOARD_: [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -43,7 +69,7 @@ export default {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
       ],
-      displayChess: [
+      displayChessTemp: [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -64,30 +90,136 @@ export default {
       FEN: 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR',
       FENArray: [],
       userInputFEN: '',
-      userInput: ''
+      userInput: '',
+      // fileName: '',//图片文件名的首字母
+      sqSelected: 0,//鼠标是否选中一棋子
+      currentChess: ''//当前选中的棋子，的首字母
     }
   },
-  created() {
+  computed: {
+    imgDomArr() {
+      return document.querySelectorAll('div.imgBox img')
+    }
+  },
+  watch: {
+    displayChess: {
+      handler(val, oldVal) {
+        // console.log('监听到有变化,新旧value：' + oldVal + '\n' + newVal);
+        // console.log(newVal);
+        this.test = val
+        // console.log(val);
+        let start = this.COORD_XY(3, 3) //51,循环开始处
+        let end = this.COORD_XY(11, 12) //203，循环结束处
+        /*tag用作记录文件名关键信息；
+        **row是当前循环索引值i对应的二维坐标的行数,col是列数；
+        **imgIndex用于记录i对应第几个图片*/
+        let tag = '', row = 0, imgIndex = 0, col = 0;
+        for (let i = start; i <= end; i++) {
+          if (this.IN_BOARD(i)) {
+            switch (val[i]) {
+              case 8:
+                tag = 'K';
+                break;
+              case 9:
+                tag = 'A';
+                break;
+              case 10:
+                tag = 'B';
+                break;
+              case 11:
+                tag = 'N';
+                break;
+              case 12:
+                tag = 'R';
+                break;
+              case 13:
+                tag = 'C';
+                break;
+              case 14:
+                tag = 'P';
+                break;
+
+              case 16:
+                tag = 'k_';
+                break;
+              case 17:
+                tag = 'a_';
+                break;
+              case 18:
+                tag = 'b_';
+                break;
+              case 19:
+                tag = 'n_';
+                break;
+              case 20:
+                tag = 'r_';
+                break;
+              case 21:
+                tag = 'c_';
+                break;
+              case 22:
+                tag = 'p_';
+                break;
+              case 1:
+                tag = 'UNexist';
+                break;
+              case 0:
+                tag = 'UNexist'
+                break;
+              default:
+                tag = 'UNexist'
+            }
+            row = this.RANK_Y(i)
+            col = this.FILE_X(i)
+            imgIndex = i - 7 * row - 30
+            let imgSrcStr = `/img/chess/${tag}.png`;
+            this.imgDomArr[imgIndex].src = imgSrcStr
+            /*清空变量*/
+            tag = '';
+            row = 0;
+            imgIndex = 0
+          } else continue
+        }
+        // console.log(this.imgDomArr[0].src);
+      },
+      // deep: true
+    }
   },
   mounted() {
     this.initBoard()
     /*每个img绑定一个点击事件*/
-    let sqSelected
-    document.querySelectorAll('div.imgBox img').forEach(e => {
-      e.addEventListener('mousedown',(e) => {
+    document.querySelectorAll('div.imgBox img').forEach((e, index) => {
+      e.addEventListener('mousedown', (e, index) => {
 
-        let fileName = e.target.src.slice(32,33)
+        let fileName = e.target.src.slice(32, 33)
         let alertStr = this.ImgNameToChessName(fileName)
-        console.log(alertStr);
-        sqSelected = 1
-        if(fileName != 'U') {}
+
+        let imgIndex = parseInt(e.target.id.slice(3)) + 1
+        // console.log(this.displayChessTemp);
+        let chessInfo = {//棋子的一些信息
+          displayChess: this.displayChessTemp,
+          fileName: fileName,
+          imgIndex: imgIndex,
+          sqSelected: this.imgIndexToSq(imgIndex)
+        }
+
+        this.chess1Click(chessInfo)
+
+        /*用户每次点击棋子应该将该棋子储存到当前棋子currentChess*/
+        // this.currentChess = fileName
+        // if(this.sqSelected) {
+        //   if(this.currentChess != 'U') {
+        //     console.log('上次点击的是空白处');
+        //   }
+        // }
+
       })
     })
 
   },
   methods: {
     IN_BOARD(sq) {
-      return this.IN_BOARD_[sq] != 0;
+      return this.IN_BOARD_[sq] !== 0;
     },
     COORD_XY(x, y) {// 将二维矩阵坐标转换为一维矩阵坐标 (x,y)含(0,0)
       return x + (y << 4);
@@ -99,26 +231,25 @@ export default {
       return sq & 15;
     },
     initBoard() {
-      this.displayChess = []//清空一下棋盘
+      this.displayChessTemp = []//清空一下棋盘
       this.FENArray = this.FEN.split('') //将FEN字符串转为数组
 
-      this.FENtoBoard(this.FENArray)//将FEN串(array型)转化为一维数组形式，并且字符元素映射为整型,保存在this.displayChess
-      for(let i=0;i<256;i++) {//将棋盘外元素设置为null
-        if(!this.IN_BOARD(i)) {
-          this.displayChess[i] = null
+      this.FENtoBoard(this.FENArray)//将FEN串(array型)转化为一维数组形式，并且字符元素映射为整型,保存在this.displayChessTemp
+      for (let i = 0; i < 256; i++) {//将棋盘外元素设置为null
+        if (!this.IN_BOARD(i)) {
+          this.displayChessTemp[i] = null
         }
       }
-
       let start = this.COORD_XY(3, 3) //51,循环开始处
       let end = this.COORD_XY(11, 12) //203，循环结束处
-      let imgDomArr = document.querySelectorAll('div.imgBox img')
+      // let imgDomArr = document.querySelectorAll('div.imgBox img')
       /*tag用作记录文件名关键信息；
       **row是当前循环索引值i对应的二维坐标的行数,col是列数；
       **imgIndex用于记录i对应第几个图片*/
       let tag = '', row = 0, imgIndex = 0, col = 0;
       for (let i = start; i <= end; i++) {
         if (this.IN_BOARD(i)) {
-          switch (this.displayChess[i]) {
+          switch (this.displayChessTemp[i]) {
             case 8:
               tag = 'K';
               break;
@@ -175,17 +306,16 @@ export default {
           col = this.FILE_X(i)
           imgIndex = i - 7 * row - 30
           let imgSrcStr = `/img/chess/${tag}.png`;
-          imgDomArr[imgIndex].src = imgSrcStr
+          this.imgDomArr[imgIndex].src = imgSrcStr
           /*清空变量*/
           tag = '';
           row = 0;
           imgIndex = 0
-        }
-        else continue
+        } else continue
       }
 
     },
-    /*将FEN串(array型)转化为一维数组形式，并且字符元素映射为整型,保存在this.displayChess*/
+    /*将FEN串(array型)转化为一维数组形式，并且字符元素映射为整型,保存在this.displayChessTemp*/
     FENtoBoard(FENArray) {
       let x = 3, y = 3
       for (let i in FENArray) {
@@ -199,11 +329,11 @@ export default {
           x += parseInt(ch)
         } else if ((ch >= 'a' && ch <= 'z')) {//红方棋子或黑方棋子
           let index = x + (y << 4)
-          this.displayChess[index] = this.FENCharToNum(ch)
+          this.displayChessTemp[index] = this.FENCharToNum(ch)
           x++
         } else if (ch >= 'A' && ch <= 'Z') {
           let index = x + (y << 4)
-          this.displayChess[index] = this.FENCharToNum(ch)
+          this.displayChessTemp[index] = this.FENCharToNum(ch)
           x++
         } else console.log('err');
       }
@@ -333,24 +463,24 @@ export default {
     drawWithFEN(FEN) {
       this.FENArray = []
       this.FENArray = FEN.split('')
-      this.displayChess = []
+      this.displayChessTemp = []
       this.FENtoBoard(this.FENArray)
-      // console.log(this.displayChess);
-      for(let i=0;i<256;i++) {//将棋盘外元素设置为null
-        if(!this.IN_BOARD(i)) {
-          this.displayChess[i] = null
+      // console.log(this.displayChessTemp);
+      for (let i = 0; i < 256; i++) {//将棋盘外元素设置为null
+        if (!this.IN_BOARD(i)) {
+          this.displayChessTemp[i] = null
         }
       }
       let start = this.COORD_XY(3, 3) //51,循环开始处
       let end = this.COORD_XY(11, 12) //203，循环结束处
-      let imgDomArr = document.querySelectorAll('div.imgBox img')
+      // this.imgDomArr = document.querySelectorAll('div.imgBox img')
       /*tag用作记录文件名关键信息；
       **row是当前循环索引值i对应的二维坐标的行数,col是列数；
       **imgIndex用于记录i对应第几个图片*/
       let tag = '', row = 0, imgIndex = 0, col = 0;
       for (let i = start; i <= end; i++) {
         if (this.IN_BOARD(i)) {
-          switch (this.displayChess[i]) {
+          switch (this.displayChessTemp[i]) {
             case 8:
               tag = 'K';
               break;
@@ -407,7 +537,7 @@ export default {
           col = this.FILE_X(i)
           imgIndex = i - 7 * row - 30
           let imgSrcStr = `/img/chess/${tag}.png`;
-          imgDomArr[imgIndex].src = imgSrcStr
+          this.imgDomArr[imgIndex].src = imgSrcStr // 重新渲染棋子图片
           /*清空变量*/
           tag = '';
           row = 0;
@@ -415,6 +545,12 @@ export default {
         }
       }
 
+    },
+    /*将第几个图片标签转换为sq*/
+    imgIndexToSq(imgIndex) {
+      let row = Math.floor((imgIndex - 1) / 9) + 3
+      return imgIndex + 30 + 7 * row - 1
+      // console.log('sq:' + sq);
     },
     sureInput() {
       let newFEN = this.userInput
@@ -426,7 +562,9 @@ export default {
     },
     btnClick2() {
       this.test2()
-
+    },
+    chess1Click(info) {
+      this.$emit('show', info)
     }
   },
 }
@@ -505,6 +643,7 @@ export default {
   background-size: 100%;
   //background-repeat: no-repeat;
 }
+
 .chessBoard {
   display: flex;
   flex-wrap: wrap;
@@ -513,6 +652,7 @@ export default {
   padding: 5px;
   border: 2px solid black;
   box-sizing: border-box;
+
   .imgBox {
     width: 11.1%;
     box-sizing: border-box;
@@ -520,11 +660,13 @@ export default {
     //border: 1px solid black;
     background: url("../public/img/chess/bc.png");
     background-size: 100%;
+
     img {
       width: 100%;
       cursor: pointer;
 
     }
+
     :hover {
       transform: scale(1.1);
     }
@@ -533,6 +675,7 @@ export default {
   :nth-child(n+37):nth-child(-n+54) {
     //border: none;
     background: none;
+
     img {
       cursor: default;
     }

@@ -48,6 +48,3 @@ categories:
 
 先写到这吧，以后有时间再作补充。
 
-
-<div id="xxx" style="width: 600px;height:400px;"></div>
-<EChartsDemo />
