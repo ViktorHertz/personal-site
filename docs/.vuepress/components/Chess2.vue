@@ -185,6 +185,7 @@ export default {
       let flag1 = this.playerSide && (currentPc >= 8 && currentPc <= 14) //标识是否为：红方走棋且棋子的值是红方
       let flag2 = !this.playerSide && currentPc >= 16 // 标识是否为：黑方走棋且棋子的值是黑方
       if(this.selectedPos === 0 && (flag1 || flag2)) {
+        // 当前棋盘上没有棋子被选中,如果点击的是己方棋子，那么直接选中该子
 
       }
 
