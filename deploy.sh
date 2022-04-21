@@ -11,7 +11,7 @@
 
 git init
 git add -A
-git commit -m '中国象棋1.0竣工！'
+git commit -m '弃用了有字库，选择了Fontmin生成特殊字体的方案'
 
 git config --global user.name "gao_sen_g"
 git config --global user.email "2322134363@qq.com"

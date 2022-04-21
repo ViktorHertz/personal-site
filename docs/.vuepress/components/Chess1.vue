@@ -180,10 +180,10 @@ export default {
     }
   },
   mounted() {
-    const css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = 'http://cdn.repository.webfont.com/webfonts/nomal/148407/46489/625407aaf629d81300ac19b3.css';
-    document.body.appendChild(css);
+    // const css = document.createElement('link');
+    // css.rel = 'stylesheet';
+    // css.href = 'https://cdn.repository.webfont.com/webfonts/nomal/148407/46489/625407aaf629d81300ac19b3.css';
+    // document.body.appendChild(css);
 
     this.initBoard()
     /*每个img绑定一个点击事件*/
@@ -641,7 +641,9 @@ export default {
   border: 2px solid black;
   box-sizing: border-box;
   position: relative;
+  margin: auto;
   .myFontBox {
+    font-family: 'LiShu',serif;
     position: absolute;
     top: 46%;
     left: 50%;
@@ -701,5 +703,14 @@ export default {
     background-repeat: no-repeat;
     background-size: 100%;
   }
+}
+
+@font-face {
+  font-family: 'LiShu';
+  //src: url('YourWebFontName.eot'); /* IE9 Compat Modes */
+  //src: url('YourWebFontName.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  src: url('../public/css/LiShu/LiShu.woff') format('woff'), /* Modern Browsers */
+  url('../public/css/LiShu/LiShu.ttf')  format('truetype'), /* Safari, Android, iOS */
+  url("../public/css/LiShu/LiShu.svg")  format('svg'); /* Legacy iOS */
 }
 </style>

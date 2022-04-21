@@ -41,7 +41,8 @@ module.exports = {
       'markdown-it-katex': {},
     },
     extendMarkdown: md => {
-      md.use(mathjax3)
+      md.use(mathjax3);
+      // md.use(require("markdown-it-disable-url-encode"));
     }
   },
   plugins: pluginConf,

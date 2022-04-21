@@ -1,7 +1,9 @@
 <template>
   <div class="totalBox">
-    <div class="tipBox">走棋方：
-      <b class="css2ebd875383243b7">{{ this.playSideStr }}</b>
+    <div class="tipBox css2ebd875383243b7">走棋方：
+      <span class="css2ebd875383243b7" :style="playerSide ? 'color: #c40a01':'color: black'">
+        {{this.playSideStr}}
+      </span>
     </div>
     <div class="tipBox2">
       <div class="winMsg">{{ this.playSideStr }}胜利！</div>
@@ -18,9 +20,6 @@
         <button @click="winSure" class="f1">重开！</button>
       </div>
     </div>
-    <!--    <div>{{displayChess}}</div>-->
-    <!--    <button @click="btnClick">父组件按钮</button>-->
-    <!--    <h3>{{ sq }}</h3>-->
     <button class="f1" @click="initBoard">remake</button>
     <chess1 @show="chess1Click" :displayChess="displayChess"></chess1>
   </div>
@@ -195,10 +194,10 @@ export default {
     }
   },
   mounted() {
-    const css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = 'http://cdn.repository.webfont.com/webfonts/nomal/148407/46489/62540fe2f629d81300ac19b5.css';
-    document.body.appendChild(css);
+    // const css = document.createElement('link');
+    // css.rel = 'stylesheet';
+    // css.href = 'https://cdn.repository.webfont.com/webfonts/nomal/148407/46489/62540fe2f629d81300ac19b5.css';
+    // document.body.appendChild(css);
   },
   methods: {
     IN_BOARD(sq) {
@@ -770,89 +769,102 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.totalBox {
-  position: relative;
-  font-size: 2ch;
-  .css2ebd673af7243b7 {
-    position: absolute;
-    right: 45%;
-    left: 45%;
-    top: 50%;
-    transform: translateX(-50%);
-    font-size: 2.5vw;
-    display: flex;
-    flex-wrap: nowrap;
-    width: 50%;
-  }
-  .tipBox {
-    position: absolute;
-    //right: 45%;
-    left: 55%;
-    top: 0;
-    transform: translateX(-50%);
-    font-size: 2.5vw;
-    display: flex;
-    flex-wrap: nowrap;
-    width: 50%;
-  }
-
-  .tipBox2 {
-    display: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(38, 50, 56, .9);
-    color: white;
-    //display: flex;
-    justify-content: center;
-    //align-items: center;
-    flex-wrap: wrap;
-    padding: 5px;
-    .winMsg {
+  .totalBox {
+    position: relative;
+    font-size: 2ch;
+    .css2ebd673af7243b7 {
+      position: absolute;
+      right: 45%;
+      left: 45%;
+      top: 50%;
+      transform: translateX(-50%);
+      font-size: 2.5vw;
       display: flex;
+      flex-wrap: nowrap;
+      width: 50%;
+    }
+    .tipBox {
+      font-family: 'LiShu';
+      position: absolute;
+      left: 10%;
+      top: 40%;
+      /* width: 2ch; */
+      /* transform: translateX(-50%); */
+      font-size: 2.5vw;
+      display: flex;
+      flex-direction: column;
+      /* align-items: baseline; */
+      flex-wrap: nowrap;
+      width: 1ch;
+    }
+
+    .tipBox2 {
+      display: none;
+      position: fixed;
       width: 100%;
+      height: 100%;
+      background-color: rgba(38, 50, 56, .9);
+      color: white;
+      //display: flex;
       justify-content: center;
-      align-items: center;
-      font-size: 5vw;
-      .scoreBox {
+      //align-items: center;
+      flex-wrap: wrap;
+      padding: 5px;
+      z-index: 1;
+      .winMsg {
         display: flex;
-        .wScore {
-          width: 100%;
-          text-align: center;
-        }
-        .bScore {
-          width: 100%;
-          text-align: center;
-        }
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        font-size: 5vw;
+        .scoreBox {
+          display: flex;
+          .wScore {
+            width: 100%;
+            text-align: center;
+          }
+          .bScore {
+            width: 100%;
+            text-align: center;
+          }
 
-        .commentBox {
-          width: 100%;
-        }
+          .commentBox {
+            width: 100%;
+          }
 
+        }
+      }
+      .btnBox {
+        width: 100%;
+        //display: flex;
+        text-align: center;
+        justify-content: center;
       }
     }
-    .btnBox {
-      width: 100%;
-      //display: flex;
-      text-align: center;
-      justify-content: center;
+
+    .f1 {
+      margin: 5px;
+      border: none;
+      box-sizing: border-box;
+      padding: 13px 10px;
+      color: white;
+      background-color: #1a6aa6;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .f1:hover {
+      background-color: #12609b;
     }
   }
+  @font-face {
+    font-family: 'LiShu';
+    src: url("../public/css/LiShu/LiShu.eot"); /* IE9 */
+    src: url("../public/css/LiShu/LiShu.eot?#iefix") format("embedded-opentype"); /* IE6-IE8 */
 
-  .f1 {
-    margin: 0 5px;
-    border: none;
-    box-sizing: border-box;
-    padding: 13px 10px;
-    color: white;
-    background-color: #1a6aa6;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
+    src: url('../public/css/LiShu/LiShu.woff') format('woff'), /* Modern Browsers */
+    url('../public/css/LiShu/LiShu.ttf')  format('truetype'), /* Safari, Android, iOS */
+    url("../public/css/LiShu/LiShu.svg")  format('svg'); /* Legacy iOS */
   }
-
-  .f1:hover {
-    background-color: #12609b;
-  }
-}
 </style>

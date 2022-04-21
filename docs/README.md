@@ -2,25 +2,24 @@
 home: true
 
 ---
-
-<show-font style="display: none"/>
-
-<style scope>
-  .bg-box {
+<ShowFont style="display: none" />
+<style>
+  /*@import "./.vuepress/public/css/home.scss";*/
+.bg-box {
     width: 100%;
     /*height: 100vh;*/
     overflow: hidden;
     position: relative;
-  }
-  .my-class {
-    max-width: 100%; 
-    margin: 0 auto; 
+}
+.my-class {
+    max-width: 100%;
+    margin: 0 auto;
     padding: 0;
-  }
-  .x {
+}
+.x {
     padding-top: 0;
-  }
-  .text-box {
+}
+.text-box {
     width: 100%;
     height: 150px;
     text-align: center;
@@ -30,33 +29,23 @@ home: true
     left: 50%;
     transform: translateX(-50%);
     color: aqua;
-  }
-  .p1 {
-    font-size: 4vw;
+}
+.p1 {
+    font-size: 10vw;
     line-height: normal;
     margin: 0 auto;
-  }
-  .p2 {
-    font-size: 4vw;
+}
+.p2 {
+    font-size: 3vw;
     font-weight: 500;
     /*line-height: normal;*/
     margin: 10px auto ;
-    letter-spacing: 1px;
-  }
-  .my-hero {
+    letter-spacing: 0.5vw;
+}
+.my-hero {
     display: none;
-  }
-  
-  #h1 {
-    font-family: 'my-font';
-  }
+}
 
-  @font-face {
-    font-family: 'my-font';
-    src: url('/css/my-font.woff') format('woff'), /* Modern Browsers */
-    url('/css/my-font.ttf')  format('truetype'), /* Safari, Android, iOS */
-    url("/css/my-font.svg")  format('svg'); /* Legacy iOS */
-  }
 </style>
 
 <script>
@@ -115,6 +104,8 @@ export default {
         console.log('i.play被点击');
         $('i.reco-bgm.reco-bgm-left').click();
       });
+    
+    
   },
   methods: {
     removeDom() {
@@ -133,8 +124,8 @@ export default {
             >
             </video>
             <div class="text-box">
-              <p class="p1" style="font-family:'ChannelSlanted2';">GaoSen</p>
-              <p class="p2" style="font-family:'TSSunOld2e833fdd37243b7';">海压竹枝低复举，风吹山角晦还明。</p>
+              <p class="p1" style="font-family:'En0';">GaoSen</p>
+              <p class="p2" style="font-family:'YanTi';">海压竹枝低复举，风吹山角晦还明。</p>
             </div>
           </div>
         `);
