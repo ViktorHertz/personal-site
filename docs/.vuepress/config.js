@@ -8,8 +8,8 @@ module.exports = {
   base: '',
   dest: '',
   theme: 'reco',
-  title: 'GaoSen',
-  description: '海压竹枝低复举，风吹山脚晦还明。',
+  // title: 'GaoSen',
+  // description: '海压竹枝低复举，风吹山脚晦还明。',
   themeConfig: themeConf,
   head: [
     ['meta', { name: 'viewport', content: 'width=device-width,initial-scale=1,user-scalable=no' }],
@@ -25,15 +25,19 @@ module.exports = {
     `],
     ['link', {rel: 'icon', href: '/img/avatar.png'}],//这是配置网站头像
     ["link", { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" }],
-      /*海压竹枝低复举*/
-    ["link", { rel: "stylesheet", href: "https://cdn.repository.webfont.com/webfonts/nomal/148407/46724/62452480f629d80bf48c9852.css",type: 'text/css'}],
-
-    /*GaoSen*/
-    ["link", { rel: "stylesheet", href: "https://cdn.repository.webfont.com/webfonts/nomal/148407/45817/624525e4f629d80bf48c9853.css",type: 'text/css'}],
 
     ['script',{src: '/js/jquery-3.6.0.min.js'}],
-    ['script',{src: '/js/loading.js'}],
     ['script',{src: "https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"}],
+
+      /*waline*/
+    ['script',{src: '//cdn.jsdelivr.net/npm/@waline/client/dist/waline.js'}],
+    ['link',{rel: "stylesheet", href: '//cdn.jsdelivr.net/npm/@waline/client/dist/waline.css'}],
+    // ['script',{},`
+    //   Waline.init({
+    //     el: '#waline',
+    //     serverURL: 'https://your-domain.vercel.app',
+    //   });
+    // `],
   ],
   markdown: {
     lineNumbers: true,

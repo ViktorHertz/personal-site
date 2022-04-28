@@ -819,6 +819,7 @@ export default {
         font-size: 5vw;
         .scoreBox {
           display: flex;
+          margin-bottom: -20vw;
           .wScore {
             width: 100%;
             text-align: center;
@@ -827,11 +828,9 @@ export default {
             width: 100%;
             text-align: center;
           }
-
           .commentBox {
             width: 100%;
           }
-
         }
       }
       .btnBox {

@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 export default {
   name: "piano",
   data() {
@@ -48,6 +49,27 @@ export default {
     }
   },
   mounted() {
+  //   let temp = $('div.page-title > div span.waline-pageview-count')
+  //   console.log(temp.length); //初始为0
+  //
+  //   if(temp.length === 0) {
+  //     const iDom = `
+  //     <i class="iconfont reco-eye">
+  //       <span class="waline-pageview-count"></span>
+  //     </i>
+  //     `
+  //     $('div.page-title > div').append(iDom)
+  //   }
+  //
+  //   Waline.init({
+  //     el: '#waline',
+  //     serverURL: 'https://blog-comment-dvxb5hzq8-viktorhertz.vercel.app',
+  //     pageview: true, // 浏览量统计
+  //     emoji: [
+  //       'https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili',
+  //     ]
+  //   });
+  //
   },
   methods: {
     f0() {

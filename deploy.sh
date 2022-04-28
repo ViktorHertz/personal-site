@@ -1,3 +1,5 @@
+#先执行tcb.sh（含打包），再deploy.sh
+
 #!/usr/bin/env sh
 
 # 确保脚本抛出遇到的错误

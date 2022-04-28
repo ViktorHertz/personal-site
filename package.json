@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@waline/client": "^2.0.3",
     "sass": "^1.49.9",
     "sass-loader": "^10.1.1",
     "vuepress-plugin-cursor-effects": "^1.1.2",
