@@ -4,7 +4,7 @@ const sidebar = require('./sidebar')
 module.exports = {
   type: 'blog',
   logo: '/img/avatar.png',
-  // author: 'GaoSen',
+  author: 'GaoSen',
   authorAvatar: '/img/avatar.png',
   lastUpdated: '上次更新 ',
   nav: nav,

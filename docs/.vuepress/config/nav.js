@@ -10,13 +10,13 @@ module.exports = [
   {
     text: '关于我', link: '/about/'
   },
-  {
-    text: '测试中', link: '/baodian/',
-    items: [
-      {text: '测试中', link: '/baodian/zero/'},
-      {text: '测试中', link: '/baodian/high/'},
-    ]
-  },
+  // {
+  //   text: '测试中', link: '/baodian/',
+  //   items: [
+  //     {text: '测试中', link: '/baodian/zero/'},
+  //     {text: '测试中', link: '/baodian/high/'},
+  //   ]
+  // },
   {
     text: '工具箱',
     items: [

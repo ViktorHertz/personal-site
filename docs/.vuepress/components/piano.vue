@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import $ from 'jquery'
 export default {
   name: "piano",
   data() {
@@ -47,29 +46,6 @@ export default {
       playIndex: [],
       userInput: ''
     }
-  },
-  mounted() {
-  //   let temp = $('div.page-title > div span.waline-pageview-count')
-  //   console.log(temp.length); //初始为0
-  //
-  //   if(temp.length === 0) {
-  //     const iDom = `
-  //     <i class="iconfont reco-eye">
-  //       <span class="waline-pageview-count"></span>
-  //     </i>
-  //     `
-  //     $('div.page-title > div').append(iDom)
-  //   }
-  //
-  //   Waline.init({
-  //     el: '#waline',
-  //     serverURL: 'https://blog-comment-dvxb5hzq8-viktorhertz.vercel.app',
-  //     pageview: true, // 浏览量统计
-  //     emoji: [
-  //       'https://cdn.jsdelivr.net/gh/walinejs/emojis@1.0.0/bilibili',
-  //     ]
-  //   });
-  //
   },
   methods: {
     f0() {
@@ -138,10 +114,8 @@ export default {
           this.playIndex.push(index)
 
         } else if (ch === 'B') {
-          // console.log('第二行');
           this.playIndex.push(parseInt(index) + 13)
         } else if (ch === 'C') {
-          // console.log('第三行');
           this.playIndex.push(parseInt(index) + 26)
         } else
           alert('谱曲字符串不合法')

@@ -16,6 +16,7 @@
   "license": "ISC",
   "devDependencies": {
     "@waline/client": "^2.0.3",
+    "babel-plugin-component": "^1.1.1",
     "sass": "^1.49.9",
     "sass-loader": "^10.1.1",
     "vuepress-plugin-cursor-effects": "^1.1.2",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "@codeciting/vuepress-plugin-echarts": "^0.2.4",
+    "@lucky-canvas/vue": "^0.1.10",
     "@maginapp/vuepress-plugin-flowchart": "^1.0.2",
     "@mr-hope/vuepress-plugin-copy-code": "^1.28.3",
     "@vuepress-reco/vuepress-plugin-bgm-player": "^1.1.4",
@@ -37,6 +39,7 @@
     "@vuepress-yard/vuepress-plugin-loading-page-specially": "^1.0.2",
     "@vuepress/plugin-last-updated": "^1.9.7",
     "echarts": "^5.3.2",
+    "element-ui": "^2.15.8",
     "jquery": "^3.6.0",
     "jsdom": "^19.0.0",
     "markdown-it-disable-url-encode": "^1.0.1",

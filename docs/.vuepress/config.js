@@ -8,7 +8,7 @@ module.exports = {
   base: '',
   dest: '',
   theme: 'reco',
-  // title: 'GaoSen',
+  title: 'GaoSen',
   // description: '海压竹枝低复举，风吹山脚晦还明。',
   themeConfig: themeConf,
   head: [
@@ -27,17 +27,12 @@ module.exports = {
     ["link", { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" }],
 
     ['script',{src: '/js/jquery-3.6.0.min.js'}],
-    ['script',{src: "https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"}],
+    ['script',{src: '/js/echarts.js'}],
+    // ['script',{src: "https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"}],
 
       /*waline*/
     ['script',{src: '//cdn.jsdelivr.net/npm/@waline/client/dist/waline.js'}],
     ['link',{rel: "stylesheet", href: '//cdn.jsdelivr.net/npm/@waline/client/dist/waline.css'}],
-    // ['script',{},`
-    //   Waline.init({
-    //     el: '#waline',
-    //     serverURL: 'https://your-domain.vercel.app',
-    //   });
-    // `],
   ],
   markdown: {
     lineNumbers: true,

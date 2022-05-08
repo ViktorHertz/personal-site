@@ -28,6 +28,7 @@ module.exports = [
     collapsable: true,
     children:[
       './notes/04_prize',
+      './notes/04_prize_demo'
     ]
   },
   {

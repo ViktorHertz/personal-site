@@ -3,6 +3,22 @@ home: true
 notShowSponsor: true
 ---
 <ShowFont style="display: none" />
+
+[//]: # (<script>)
+
+[//]: # (import $ from 'jquery';)
+
+[//]: # (export default {)
+
+[//]: # (  mounted&#40;&#41; {)
+
+[//]: # (    $&#40;'div.volume-bar div.bar'&#41;.attr&#40;'style','width:40%'&#41;;)
+
+[//]: # (  })
+
+[//]: # (})
+
+[//]: # (</script>)
 <style>
   /*@import "./.vuepress/public/css/home.scss";*/
 .hero {
