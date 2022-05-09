@@ -5,7 +5,6 @@ module.exports = [
     collapsable: true,
     children:[
       '/learning/frontEnd/notes/echarts',
-      '/learning/frontEnd/notes/demo0',
     ]
   },
   {
