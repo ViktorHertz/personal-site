@@ -7,6 +7,12 @@ module.exports = {
     audios: [
       // 网络文件示例
       {
+        name: '鲸',
+        artist: 'DInxm Robinson',
+        url: '/bgm/bgm1.mp3',
+        cover: '/bgm/cover1.png'
+      },
+      {
         name: '夏日漱石',
         artist: '橘子海',
         url: '/gaosen/bgm/bgm.mp3',

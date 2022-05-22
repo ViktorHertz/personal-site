@@ -2,6 +2,10 @@ const nav = require('./nav')
 const sidebar = require('./sidebar')
 
 module.exports = {
+  codeTheme: 'funky',
+  subSidebar: 'auto',//在所有页面中启用自动生成子侧边栏，原 sidebar 仍然兼容
+  mode: 'dark',
+  modePicker: true, // 默认 true，false 不显示模式调节按钮，true 则显示
   type: 'blog',
   logo: '/img/avatar.png',
   author: 'GaoSen',

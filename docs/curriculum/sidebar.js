@@ -37,7 +37,15 @@ module.exports = [
     children:[
         './notes/05_chess1',
         './notes/05_chess2',
+        './notes/05_chessx',
         './notes/05_chess_demo'
+    ]
+  },
+  {
+    title:'数电实验',
+    collapsable: true,
+    children:[
+        './数电实验/时序电路的设计与实现',
     ]
   },
 ]

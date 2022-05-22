@@ -21,7 +21,20 @@
       </div>
     </div>
     <button class="f1" @click="initBoard">remake</button>
-    <chess1 @show="chess1Click" :displayChess="displayChess"></chess1>
+    <el-popover
+        placement="left-end"
+        width="300"
+        trigger="hover"
+        >
+      <h3><i class="el-icon-setting"></i>电脑方的被动技能</h3>
+      <p><i class="el-icon-refresh"></i>兵线刷新：当电脑方卒数量<3时触发</p>
+      <p><i class="el-icon-user"></i>替父从军：30%机率触发</p>
+      <p><i class="el-icon-s-promotion"></i>草木皆兵：电脑方评估当前局势，当它认为劣势过大时触发</p>
+      <button class="f1" @click="machineClick" slot="reference">人机对战</button>
+    </el-popover>
+    <chess1 @show="chess1Click" :displayChess="displayChess"
+            :player-side="playerSide"
+            :is-select-machine="isSelectMachine"></chess1>
   </div>
 </template>
 
@@ -186,18 +199,13 @@ export default {
       ],
       wMarkMsg: 'err',
       bMarkMsg: 'err',
+      isSelectMachine: false,
     }
   },
   computed: {
     playSideStr() {
       return this.playerSide ? '红方' : '黑方'
     }
-  },
-  mounted() {
-    // const css = document.createElement('link');
-    // css.rel = 'stylesheet';
-    // css.href = 'https://cdn.repository.webfont.com/webfonts/nomal/148407/46489/62540fe2f629d81300ac19b5.css';
-    // document.body.appendChild(css);
   },
   methods: {
     IN_BOARD(sq) {
@@ -206,12 +214,15 @@ export default {
     COORD_XY(x, y) {// 将二维矩阵坐标转换为一维矩阵坐标 (x,y)含(0,0)
       return x + (y << 4);
     },
+    /*判断是否在九宫格内,若是，返回true*/
     IN_FORT(sq) {
       return this.IN_FORT_[sq] !== 0;
     },
+    /*如果从起点sqSrc到终点sqDst没有过河，则返回true；否则返回false*/
     SAME_HALF(sqSrc, sqDst) {// 如果从起点sqSrc到终点sqDst没有过河，则返回true；否则返回false
       return ((sqSrc ^ sqDst) & 0x80) === 0;
     },
+    /*sq是棋子位置，sd是走棋方（红方0，黑方1）。如果该位置已过河，则返回true；否则返回false。*/
     AWAY_HALF(sq, sd) {// sq是棋子位置，sd是走棋方（红方0，黑方1）。如果该位置已过河，则返回true；否则返回false。
       return (sq & 0x80) === (sd << 7);
     },
@@ -347,8 +358,14 @@ export default {
         } else console.log('err');
       }
     },
+    /*根据子组件发射的棋盘和用户点击，重新渲染棋盘*/
     chess1Click(chessInfo) {
       // this.judgeKtoK()
+      if(chessInfo === null) {
+        console.log('走棋方:' + this.playerSide);
+        this.playerSide = !this.playerSide
+        return
+      }
       this.displayChess = chessInfo.displayChess //把子组件发射的棋盘储存一下
       this.manageBoardArray()//整理一下棋盘
       this.sq = chessInfo.sqSelected
@@ -403,16 +420,6 @@ export default {
       this.judgeKtoK()
     },
     drawWithFEN() {
-      // this.FENArray = []
-      // this.FENArray = FEN.split('')
-      // this.displayChess = []
-      // this.FENtoBoard(this.FENArray)
-      // // console.log(this.displayChess);
-      // for(let i=0;i<256;i++) {//将棋盘外元素设置为null
-      //   if(!this.IN_BOARD(i)) {
-      //     this.displayChess[i] = null
-      //   }
-      // }
       let start = this.COORD_XY(3, 3) //51,循环开始处
       let end = this.COORD_XY(11, 12) //203，循环结束处
       let imgDomArr = document.querySelectorAll('div.imgBox img')
@@ -488,6 +495,7 @@ export default {
       }
 
     },
+    /*将棋子字符转成对应的整数*/
     FENCharToNum(item) {//将棋子字符转成对应的整数
       switch (item) {
         case 'K' : {
@@ -574,7 +582,8 @@ export default {
                 (item === -31) || (item === 31))
             && (this.displayChess[sqPin] === 1)
       }
-      else if (pieNum === this.pieceNumber.rook) {//车
+      else if (pieNum === this.pieceNumber.rook) {
+        //车
         let isHavePc = false
         if (item > 0) {
           if (item % 16 === 0) {//按列往下走
@@ -602,7 +611,8 @@ export default {
               }
               i -= 16;
             }
-          } else {//向左移
+          }
+          else {//向左移
             for (let i = sqSrc - 1; i > sqDest; i--) {
               if (this.displayChess[i] >= 8) {
                 isHavePc = true
@@ -627,7 +637,8 @@ export default {
               }
               i += 16
             }
-          } else if (item < 0) {//往上走
+          }
+          else if (item < 0) {//往上走
             for (let i = sqSrc - 16; i > sqDest;) {//按列往上走
               if (this.displayChess[i] >= 8) {
                 // console.log(i);
@@ -639,7 +650,8 @@ export default {
             }
 
           }
-        } else {
+        }
+        else {
           if (item > 0) {//向右移
             for (let i = sqSrc + 1; i < sqDest; i++) {
               if (this.displayChess[i] >= 8) {
@@ -647,7 +659,8 @@ export default {
               }
               if (havePcNum > 1) break
             }
-          } else {//向左移
+          }
+          else {//向左移
             for (let i = sqSrc - 1; i > sqDest; i--) {
               if (this.displayChess[i] >= 8) {
                 havePcNum++
@@ -659,15 +672,20 @@ export default {
         /*炮要想越过一个棋子，其终点处必须为对方棋子*/
         let flag = false
         if (this.playerSide) {//走棋方为红方
-          if (this.displayChess[sqDest] & 16) {//终点处为黑方棋子
-            flag = true
-          }
-        } else {
-          if (this.displayChess[sqDest] & 8) {//终点处为红方棋子
+          if (this.displayChess[sqDest] & 16) {//终点处为黑方棋子,且翻越过一个棋子
             flag = true
           }
         }
-        return (this.RANK_Y(sqSrc) === this.RANK_Y(sqDest) || this.FILE_X(sqSrc) === this.FILE_X(sqDest)) //同行同列
+        else {
+          if (this.displayChess[sqDest] & 8) {//终点处为红方棋子,且翻越过一个棋子
+            flag = true
+          }
+        }
+        /*如果没翻越棋子，但终点处是对方棋子*/
+        if(this.displayChess[sqDest] & 8 && havePcNum === 0) return false
+        if(this.displayChess[sqDest] & 16 && havePcNum === 0) return false
+
+          return (this.RANK_Y(sqSrc) === this.RANK_Y(sqDest) || this.FILE_X(sqSrc) === this.FILE_X(sqDest)) //同行同列
             && ((havePcNum === 1 && flag) || havePcNum === 0)
       }
       else if (pieNum === this.pieceNumber.pawn) {//兵
@@ -763,6 +781,9 @@ export default {
     },
     btnClick() {
       console.log(-32 % 16);
+    },
+    machineClick() {
+      this.isSelectMachine = true
     }
   },
 }

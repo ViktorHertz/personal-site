@@ -1,5 +1,5 @@
 ---
-title: 效果演示
+title: 象棋效果演示
 date: '2022-04-08 12:56'
 sidebar: 'auto'
 tags:
@@ -9,3 +9,4 @@ categories:
 ---
 
 <Chess2 />
+

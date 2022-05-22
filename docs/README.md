@@ -4,21 +4,15 @@ notShowSponsor: true
 ---
 <ShowFont style="display: none" />
 
-[//]: # (<script>)
+<script>
+export default {
+  mounted() {
+  },
+  methods: {
+  }
+}
 
-[//]: # (import $ from 'jquery';)
-
-[//]: # (export default {)
-
-[//]: # (  mounted&#40;&#41; {)
-
-[//]: # (    $&#40;'div.volume-bar div.bar'&#41;.attr&#40;'style','width:40%'&#41;;)
-
-[//]: # (  })
-
-[//]: # (})
-
-[//]: # (</script>)
+</script>
 <style>
   /*@import "./.vuepress/public/css/home.scss";*/
 .hero {

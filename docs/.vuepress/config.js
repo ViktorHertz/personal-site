@@ -3,7 +3,7 @@ const themeConf = require('./config/themeConf')
 const
     // md = require('markdown-it')(),
       mathjax3 = require('markdown-it-mathjax3');
-
+const encode = require('markdown-it-disable-url-encode')
 module.exports = {
   base: '',
   dest: '',
@@ -24,15 +24,19 @@ module.exports = {
         })();
     `],
     ['link', {rel: 'icon', href: '/img/avatar.png'}],//这是配置网站头像
-    ["link", { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" }],
+    ["link", { rel: "stylesheet", href: "https://unpkg.com/katex@0.11.1/dist/katex.min.css" }],
 
     ['script',{src: '/js/jquery-3.6.0.min.js'}],
     ['script',{src: '/js/echarts.js'}],
+    ['script',{src: '/js/RemoveRecoDark.js'}],
     // ['script',{src: "https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"}],
 
       /*waline*/
-    ['script',{src: '//cdn.jsdelivr.net/npm/@waline/client/dist/waline.js'}],
-    ['link',{rel: "stylesheet", href: '//cdn.jsdelivr.net/npm/@waline/client/dist/waline.css'}],
+    ['script',{src: 'https://unpkg.com/@waline/client/dist/waline.js'}],
+    ['link',{rel: "stylesheet", href: 'https://unpkg.com/@waline/client/dist/waline.css'}],
+    /*elementUI*/
+    // ['script',{src: 'https://unpkg.com/element-ui/lib/index.js'}],
+    // ['link',{rel: "stylesheet", href: 'https://unpkg.com/element-ui/lib/theme-chalk/index.css'}],
   ],
   markdown: {
     lineNumbers: true,
@@ -41,7 +45,7 @@ module.exports = {
     },
     extendMarkdown: md => {
       md.use(mathjax3);
-      // md.use(require("markdown-it-disable-url-encode"));
+      md.use(encode);
     }
   },
   plugins: pluginConf,
