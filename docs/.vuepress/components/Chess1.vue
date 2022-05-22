@@ -223,9 +223,11 @@ export default {
         }
         else if(skill === 0) {
           // let dom1 = $('#pos8')
-          let dom1 = this.machine_getPcToBeMoved()
+          let domArr = this.machine_getPcToBeMoved().map(e => {return e})
+          let dom1 = domArr[0]
           // let dom2 = this.machine_getSteps(dom1)[0]
-          let dom2 = this.machine_getExactStep(dom1)
+          // let dom2 = this.machine_getExactStep(dom1)
+          let dom2 = domArr[1]
           this.$message.success('电脑移动了' + this.ImgNameToChessName(dom1.attr('src').slice(11,12)))
 
           this.machineMove(dom1,dom2)
@@ -1052,72 +1054,101 @@ export default {
         }
         else if(this.displayChessTemp[sqSrc] & 8) whiteAllPc.push(sqSrc)
       }
-      let randomIndex
-      let randomSrcDom//起点,终点
-      let val1 = 0
-      let minMaxVal2_sqSrc = blackAllPc[0]//使maxVal2最小时的棋子的起点一维坐标(黑方执棋)
-      for(let i in blackAllPc) {
+      console.log(blackAllPc);
+      /*该循环可得到红方棋子下一步的起点选择哪个*/
+      let val2 = 0, maxVal = 0, maxVal2_sqSrc_w, DstDom
+      for(let k in whiteAllPc) {
+        let sqSrc_w = whiteAllPc[k]//某个红方棋子的起点一维坐标
+        // console.log(sqSrc2);
+        /*针对该红棋红方得到最有利于它的走法*/
+        DstDom = this.machine_getExactStep(this.sqToDom(sqSrc_w))
+        if(DstDom === undefined) break //如果遍历到的红方棋子一种走法都没有，就跳过
+        // console.log(DstDom);
+        /*该红方棋子最佳走法的终点一维坐标*/
+        let sqDst_w = this.domToSq(DstDom)
+        // console.log(sqDst2);
+        let tempNum2 = displayChess_evaluate[sqDst_w]//保存一下落子前终点处的棋子Num
+        displayChess_evaluate[sqDst_w] = displayChess_evaluate[sqSrc_w] //假设落子了
+        displayChess_evaluate[sqSrc_w] = 1//原来的起点变为空
+        val2 = this.machine_evaluate(displayChess_evaluate)//试求评估值2
+        /*站在红方的角度，我肯定力求val2最大*/
+        if(val2 > maxVal) {
+          maxVal = val2 //更新最大评估值
+          maxVal2_sqSrc_w = sqSrc_w//更新评估值最大时选择的棋子
+        }
+        else {
+          // minMaxVal2_sqSrc = blackAllPc[i]
+          console.log('error');
+        }
+        displayChess_evaluate[sqSrc_w] = displayChess_evaluate[sqDst_w]//恢复中转棋盘
+        displayChess_evaluate[sqDst_w] = tempNum2//恢复中转棋盘
+        // break
+      }
+      console.log('红方最好的起点:');
+      console.log(this.sqToDom(maxVal2_sqSrc_w));
+      console.log('红方最好的终点:');
+      console.log(this.machine_getExactStep(this.sqToDom(maxVal2_sqSrc_w)));
+      console.log('假设该红方棋子落子后的评估值：' + maxVal);
+
+      let sqDst_b,sqSrc_b//黑方最终决定的起点、终点
+      let val1 = 0,minVal = maxVal
+      // let minMaxVal2_sqSrc = blackAllPc[0]//使maxVal2最小时的棋子的起点一维坐标(黑方执棋)
+      for(let i in blackAllPc) {//遍历所有黑棋
+        console.log(i);
+        if(i == 3) break //先遍历前4颗棋子
         let sqSrc = blackAllPc[i]//某个黑方棋子的起点一维坐标
         console.log('一黑方棋子的起点:');
         console.log(this.sqToDom(sqSrc));
         console.log('一黑方棋子的终点：');
         /*走法数组，元素为对象类型*/
         let stepArray = this.machine_getSteps(this.sqToDom(sqSrc)).map(e => {return e})
-        for(let j in stepArray) {
-          console.log(stepArray[j]);
+        for(let j in stepArray) {//遍历某黑棋的所有走法
           /*该黑方棋子其中一个走法的终点，的一维坐标*/
           let sqDst = this.domToSq(stepArray[j])
-          let tempNum = displayChess_evaluate[sqDst] //保存一下落子前终点处的棋子Num
-          displayChess_evaluate[sqDst] = displayChess_evaluate[sqSrc] //假设落子了
-          displayChess_evaluate[sqSrc] = 1//原来的起点变为空
-          val1 = this.machine_evaluate(displayChess_evaluate)//黑方走完，试求评估值1
-          /*站在黑方的角度，我肯定力求val1最小,maxVal2最小*/
-          let val2 = 0, maxVal2 = 0, maxVal2_sqSrc2 = 137
-          for(let k in whiteAllPc) {
-            //轮到红方走棋
-            let sqSrc2 = whiteAllPc[k]//某个红方棋子的起点一维坐标
-            // console.log(sqSrc2);
-            let DstDom = this.machine_getExactStep(this.sqToDom(sqSrc2))
-            console.log('一红方棋子的起点:');
-            console.log(this.sqToDom(sqSrc2));
-            console.log('一红方棋子的终点:');
-            console.log(DstDom);
-            if(DstDom === undefined) break //如果遍历到的红方棋子一种走法都没有，就跳过
-            // console.log(DstDom);
-            /*该红方棋子最佳走法的终点一维坐标*/
-            let sqDst2 = this.domToSq(DstDom)
-            // console.log(sqDst2);
-            let tempNum2 = displayChess_evaluate[sqDst2]//保存一下落子前终点处的棋子Num
-            displayChess_evaluate[sqDst2] = displayChess_evaluate[sqSrc2] //假设落子了
-            displayChess_evaluate[sqSrc2] = 1//原来的起点变为空
-            val2 = this.machine_evaluate(displayChess_evaluate)//试求评估值2
-            console.log('假设该红方棋子落子后的评估值：' + val2);
-            /*站在红方的角度，我肯定力求val2最大*/
-            if(val2 > maxVal2) {
-              maxVal2 = val2 //更新最大评估值
-              maxVal2_sqSrc2 = sqSrc2//更新评估值最大时选择的棋子
-              minMaxVal2_sqSrc = sqSrc
-              console.log(sqSrc);
-              console.log(maxVal2);
-              console.log('黑方最优的走棋的起点');
-              console.log(this.sqToDom(minMaxVal2_sqSrc));
-            }
-            else {
-              // minMaxVal2_sqSrc = blackAllPc[i]
-              console.log('error');
-            }
-            displayChess_evaluate[sqSrc2] = displayChess_evaluate[sqDst2]//恢复中转棋盘
-            displayChess_evaluate[sqDst2] = tempNum2//恢复中转棋盘
-            // break
-          }
+          console.log(this.sqToDom(sqDst));
 
+          let sqDst_w = this.domToSq(this.machine_getExactStep(this.sqToDom(maxVal2_sqSrc_w)))//重新求一下之前确定的红方棋子的终点
+          console.log('重新求了红棋的终点：');
+          console.log(this.sqToDom(sqDst_w));
+          let tempNum3 = displayChess_evaluate[maxVal2_sqSrc_w]//保存红棋落子前的棋子Num
+          displayChess_evaluate[sqDst_w] = displayChess_evaluate[maxVal2_sqSrc_w]//假设红棋落子了
+          displayChess_evaluate[maxVal2_sqSrc_w] = 1//原来的起点变为空
+
+          // console.log('可以到达①');
+          let tempNum = displayChess_evaluate[sqDst] //保存一下黑方棋子落子前终点处的棋子Num
+          displayChess_evaluate[sqDst] = displayChess_evaluate[sqSrc] //假设黑棋落子了
+          displayChess_evaluate[sqSrc] = 1//原来的起点变为空
+
+          // console.log('可以到达②');
+          val1 = this.machine_evaluate(displayChess_evaluate)//黑、红方都假设走完后，求评估值1
+          console.log('假设黑棋落子后的评估值：' + val1);
+          /*站在黑方的角度，我肯定力求val1最小,maxVal2最小*/
+          if(val1 <= minVal) {
+            minVal = val1
+            sqDst_b = sqDst
+            sqSrc_b = sqSrc
+            console.log('最小评估值' + minVal);
+          }
+          // else console.log('err');
+          /*黑方走棋破坏的*/
           displayChess_evaluate[sqSrc] = displayChess_evaluate[sqDst]//恢复中转棋盘
           displayChess_evaluate[sqDst] = tempNum//恢复中转棋盘
+          /*红方走棋破坏的*/
+          displayChess_evaluate[maxVal2_sqSrc_w] = displayChess_evaluate[sqDst_w]
+          displayChess_evaluate[sqDst_w] = tempNum3
           // break
         }
+
         // break
       }
-
+      console.log('黑棋最终的起点:');
+      console.log(this.sqToDom(sqSrc_b));
+      console.log('黑棋最终的终点:');
+      console.log(this.sqToDom(sqDst_b));
+      // return randomSrcDom
+      return [this.sqToDom(sqSrc_b),this.sqToDom(sqDst_b)]
+      // let randomIndex
+      // let randomSrcDom//起点,终点
       // while(1) {
       //   randomIndex = Math.floor(Math.random() * blackAllPc.length)//随机数在数组中的索引值
       //   // let randomSq = blackAllPc[randomIndex]
@@ -1127,11 +1158,13 @@ export default {
       //     break
       // }
 
-      // return randomSrcDom
-      return this.sqToDom(minMaxVal2_sqSrc)
     },
     /*根据输入的起点dom对象，返回使评估值最小的终点的dom对象*/
-    machine_getExactStep(srcDom) {
+    machine_getExactStep(srcDom,arr) {
+      console.log(arr);
+      if(!arr) {
+        let allWays = this.machine_getSteps(srcDom)
+      }
       let allWays = this.machine_getSteps(srcDom) //该棋子的所有走法,数组元素是dom对象
       /*棋盘中转站*/
       let displayChess_evaluate = this.displayChessTemp.map((item) => {
