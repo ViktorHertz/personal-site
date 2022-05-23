@@ -28,15 +28,12 @@ module.exports = {
 
     ['script',{src: '/js/jquery-3.6.0.min.js'}],
     ['script',{src: '/js/echarts.js'}],
-    ['script',{src: '/js/RemoveRecoDark.js'}],
+    // ['script',{src: '/js/RemoveRecoDark.js'}],
     // ['script',{src: "https://cdn.bootcss.com/echarts/3.7.2/echarts.min.js"}],
 
       /*waline*/
-    ['script',{src: 'https://unpkg.com/@waline/client/dist/waline.js'}],
-    ['link',{rel: "stylesheet", href: 'https://unpkg.com/@waline/client/dist/waline.css'}],
-    /*elementUI*/
-    // ['script',{src: 'https://unpkg.com/element-ui/lib/index.js'}],
-    // ['link',{rel: "stylesheet", href: 'https://unpkg.com/element-ui/lib/theme-chalk/index.css'}],
+    ['script',{src: 'https://unpkg.com/@waline/client@v2/dist/waline.js'}],
+    ['link',{rel: "stylesheet", href: 'https://unpkg.com/@waline/client@v2/dist/waline.css'}],
   ],
   markdown: {
     lineNumbers: true,

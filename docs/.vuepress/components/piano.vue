@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div>
+      <h2>465asdaa312sad</h2>
+      <Mode />
+    </div>
     <div class="layout-box">
       <h2>奏乐输入请以以下图片布局为准</h2>
       <br>
@@ -37,7 +41,9 @@
 </template>
 
 <script>
+import Mode from "../theme/components/Mode";
 export default {
+  components: {Mode},
   name: "piano",
   data() {
     return {

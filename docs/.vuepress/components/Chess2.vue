@@ -5,24 +5,34 @@
         {{this.playSideStr}}
       </span>
     </div>
-    <div class="tipBox2">
-      <div class="winMsg">{{ this.playSideStr }}胜利！</div>
-      <div class="scoreBox">
-        <div class="wScore">红方得分：{{ this.wScore }}</div>
-        <div class="bScore">黑方得分：{{ this.bScore }}</div>
-        <br>
-        <div class="commentBox">
-          <div>红方得到的评语：{{ this.wMarkMsg }}</div>
-          <div>黑方得到的评语：{{ this.bMarkMsg }}</div>
+    <div class="tipBox2" :class="{topLevel: isTopLevel, bottomLevel: isBottomLevel}">
+      <el-collapse-transition>
+        <div v-show="show3">
+          <div class="transition-box">
+            <div class="winMsg">{{ this.winPlayerStr }}胜利！</div>
+            <div class="scoreBox">
+              <div class="wScore">红方得分：{{ this.wScore }}</div>
+              <div class="bScore">黑方得分：{{ this.bScore }}</div>
+              <br>
+            </div>
+          </div>
+          <div class="transition-box">
+            <div class="commentBox">
+              <div>红方得到的评语：{{ this.wMarkMsg }}</div>
+              <div>黑方得到的评语：{{ this.bMarkMsg }}</div>
+            </div>
+          </div>
+          <div class="transition-box">
+            <div class="btnBox">
+              <button @click="winSure" class="f1">重开！</button>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="btnBox">
-        <button @click="winSure" class="f1">重开！</button>
-      </div>
+      </el-collapse-transition>
     </div>
-    <button class="f1" @click="initBoard">remake</button>
+    <button class="f1" @click="remake">remake</button>
     <el-popover
-        placement="left-end"
+        placement="bottom-start"
         width="300"
         trigger="hover"
         >
@@ -33,6 +43,7 @@
       <button class="f1" @click="machineClick" slot="reference">人机对战</button>
     </el-popover>
     <chess1 @show="chess1Click" :displayChess="displayChess"
+            @board-update="boardUpdate"
             :player-side="playerSide"
             :is-select-machine="isSelectMachine"></chess1>
   </div>
@@ -200,14 +211,180 @@ export default {
       wMarkMsg: 'err',
       bMarkMsg: 'err',
       isSelectMachine: false,
+      show3: false,
+      isTopLevel: false,
+      isBottomLevel: true,
+      winPlayerStr: ''
     }
+  },
+  mounted() {
   },
   computed: {
     playSideStr() {
       return this.playerSide ? '红方' : '黑方'
-    }
+    },
   },
   methods: {
+    /*左上角重开按钮*/
+    remake() {
+      this.$confirm('此操作将初始化棋盘,是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+          .then(() => {
+        this.$message({
+          type: 'success',
+          message: '已重开'
+        });
+        this.initBoard()
+      })
+          .catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消重开'
+        });
+      });
+    },
+    boardUpdate(arr) {
+      this.winPlayerStr = this.playSideStr
+      let k = 0, j = 0
+      arr.map(item => {
+        if(item === 8) k++
+        if(item === 16) j++
+      })
+      if(k === 0 && j === 0) {return 'err'}
+      else if(k === 0) {//没有帅，即黑方赢
+        setTimeout(() => {
+          this.winPlayerStr = '黑方'
+          this.toggleDisplay()
+        },0)
+      }
+      else if(j === 0) {//没有将，即红方赢
+        setTimeout(() => {
+          this.winPlayerStr = '红方'
+          this.toggleDisplay()
+        },0)
+      }
+    },
+    /*显示/隐藏游戏结束画面*/
+    toggleDisplay() {
+      this.show3 = !this.show3
+      this.isTopLevel = !this.isTopLevel
+      this.isBottomLevel = !this.isBottomLevel
+    },
+    /*根据子组件发射的棋盘和用户点击，重新渲染棋盘*/
+    chess1Click(chessInfo) {
+      // this.judgeKtoK()
+      if(chessInfo === null) {
+        this.playerSide = !this.playerSide
+        return
+      }
+      this.displayChess = chessInfo.displayChess //把子组件发射的棋盘储存一下
+      this.manageBoardArray()//整理一下棋盘
+      this.sq = chessInfo.sqSelected
+      let currentPc = this.displayChess[chessInfo.sqSelected]
+      let flag1 = this.playerSide && (currentPc >= 8 && currentPc <= 14) //标识是否为：红方走棋且棋子的值是红方
+      let flag2 = !this.playerSide && currentPc >= 16 // 标识是否为：黑方走棋且棋子的值是黑方
+      if (this.selectedPos === 0 && (flag1 || flag2)) {
+        // 当前棋盘上没有棋子被选中,如果点击的是己方棋子，那么直接选中该子
+        this.selectedPos = chessInfo.sqSelected
+      }
+      else if (this.selectedPos !== 0) {//当前棋盘上有棋子被选中
+        if (flag1 || flag2) {// 点击的是本方棋子
+          this.selectedPos = chessInfo.sqSelected
+        }
+        else {//点击的是对方棋子或空白处
+          this.sqSrc = this.selectedPos
+          this.sqDest = chessInfo.sqSelected
+          let flag3 = this.judgeMove(this.displayChess[this.sqSrc], this.sqSrc, this.sqDest)//用于标记走棋是否合法
+          if (flag3) {
+
+            /*前2种情况是游戏结束时执行*/
+            if (this.displayChess[this.sqDest] === 8) {//如果吃掉红方的帅
+              // $('div.tipBox2').attr('style', 'display: flex;')
+              this.toggleDisplay()
+              this.bScore += 40
+              this.markBoard()
+            }
+            else if (this.displayChess[this.sqDest] === 16) {//如果吃掉黑方的将
+              // $('div.tipBox2').attr('style', 'display: flex;')
+              this.toggleDisplay()
+              this.wScore += 40
+              this.markBoard()
+            }
+            else {
+              if (this.displayChess[this.sqDest] & 8) {//终点处是红方棋子
+                this.bScore += 10
+              }
+              else if (this.displayChess[this.sqDest] & 16) {//终点处是黑方棋子
+                this.wScore += 10
+              }
+
+              this.$set(this.displayChess, this.sqDest, this.displayChess[this.sqSrc])//将起点处的棋子移到终点处
+              this.$set(this.displayChess, this.sqSrc, 1)
+              this.playerSide = !this.playerSide
+
+              // console.log('终点棋子:' + this.displayChess[this.sqDest]);
+              // console.log('起点棋子:' + this.displayChess[this.sqSrc]);
+            }
+
+          }
+        }
+
+      }
+      this.judgeKtoK()
+    },
+    /*判断将帅相对时游戏结束*/
+    judgeKtoK() {
+      let isHavePc_KING = false //用于查询将帅之间是否有棋子格挡
+      for(let i = this.KING1_INDEX + 16; i <= this.KING0_INDEX - 16;) {//查询将帅之间是否有棋子格挡
+        if(this.displayChess[i] >= 8) {
+          isHavePc_KING = true
+          // console.log('在i处有格挡:' + i);
+          break
+        }
+        i += 16
+      }
+      if(this.FILE_X(this.KING0_INDEX) === this.FILE_X(this.KING1_INDEX) && !isHavePc_KING) {
+        //将帅在同一列且中间无棋子格挡
+        if(this.playerSide) {//红方走
+          this.wScore += 40
+        }
+        else
+          this.bScore += 40
+        // this.playerSide = !this.playerSide
+        this.markBoard()
+        $('div.tipBox2').attr('style', 'display: flex;')
+        this.toggleDisplay()
+        // console.log('将帅在同一列');
+      }
+    },
+    /*确定重开*/
+    winSure() {
+      // $('div.tipBox2').attr('style', 'display: none;')
+      this.toggleDisplay()
+      this.initBoard()
+    },
+    markBoard() {
+      let wScore = this.wScore
+      if (wScore <= 20) this.wMarkMsg = this.markMsgArr[0];
+      else if (wScore <= 30) this.wMarkMsg = this.markMsgArr[1];
+      else if (wScore <= 40) this.wMarkMsg = this.markMsgArr[2];
+      else if (wScore <= 50) this.wMarkMsg = this.markMsgArr[3];
+      else if (wScore <= 60) this.wMarkMsg = this.markMsgArr[4];
+      else if (wScore > 60) this.wMarkMsg = this.markMsgArr[5];
+      else this.wMarkMsg = '暂无评分'
+      let bScore = this.bScore
+
+      if (bScore <= 20) this.bMarkMsg = this.markMsgArr[0];
+      else if (bScore <= 30) this.bMarkMsg = this.markMsgArr[1];
+      else if (bScore <= 40) this.bMarkMsg = this.markMsgArr[2];
+      else if (bScore <= 50) this.bMarkMsg = this.markMsgArr[3];
+      else if (bScore <= 60) this.bMarkMsg = this.markMsgArr[4];
+      else if (bScore > 60) this.bMarkMsg = this.markMsgArr[5];
+      else this.wMarkMsg = '暂无评分'
+    },
     IN_BOARD(sq) {
       return this.IN_BOARD_[sq] !== 0;
     },
@@ -252,6 +429,7 @@ export default {
       this.playerSide = true
       this.sqSrc = this.sqDest = this.pcSelfSide = this.selectedPos = this.wScore = this.bScore = 0
       this.wMarkMsg = ''
+      this.bMarkMsg = ''
       this.KING0_INDEX = 199
       this.KING1_INDEX = 55
       this.FENtoBoard(this.FEN.split(''))//将FEN串(array型)转化为一维数组形式，并且字符元素映射为整型,保存在this.displayChess
@@ -261,80 +439,6 @@ export default {
         }
         // else this.displayChess[i] = 1
       }
-      let start = this.COORD_XY(3, 3) //51,循环开始处
-      let end = this.COORD_XY(11, 12) //203，循环结束处
-      // let imgDomArr = document.querySelectorAll('div.imgBox img')
-      /*tag用作记录文件名关键信息；
-      **row是当前循环索引值i对应的二维坐标的行数,col是列数；
-      **imgIndex用于记录i对应第几个图片*/
-      let tag = '', row = 0, imgIndex = 0, col = 0;
-      for (let i = start; i <= end; i++) {
-        if (this.IN_BOARD(i)) {
-          switch (this.displayChess[i]) {
-            case 8:
-              tag = 'K';
-              break;
-            case 9:
-              tag = 'A';
-              break;
-            case 10:
-              tag = 'B';
-              break;
-            case 11:
-              tag = 'N';
-              break;
-            case 12:
-              tag = 'R';
-              break;
-            case 13:
-              tag = 'C';
-              break;
-            case 14:
-              tag = 'P';
-              break;
-
-            case 16:
-              tag = 'k_';
-              break;
-            case 17:
-              tag = 'a_';
-              break;
-            case 18:
-              tag = 'b_';
-              break;
-            case 19:
-              tag = 'n_';
-              break;
-            case 20:
-              tag = 'r_';
-              break;
-            case 21:
-              tag = 'c_';
-              break;
-            case 22:
-              tag = 'p_';
-              break;
-            case 1:
-              tag = 'UNexist';
-              break;
-            case 0:
-              tag = 'UNexist'
-              break;
-            default:
-              tag = 'UNexist'
-          }
-          row = this.RANK_Y(i)
-          col = this.FILE_X(i)
-          imgIndex = i - 7 * row - 30
-          let imgSrcStr = `/img/chess/${tag}.png`;
-          this.imgDomArr[imgIndex].src = imgSrcStr
-          /*清空变量*/
-          tag = '';
-          row = 0;
-          imgIndex = 0
-        }
-      }
-
     },
     FENtoBoard(FENArray) {
       let x = 3, y = 3
@@ -356,194 +460,6 @@ export default {
           this.displayChess[index] = this.FENCharToNum(ch)
           x++
         } else console.log('err');
-      }
-    },
-    /*根据子组件发射的棋盘和用户点击，重新渲染棋盘*/
-    chess1Click(chessInfo) {
-      // this.judgeKtoK()
-      if(chessInfo === null) {
-        console.log('走棋方:' + this.playerSide);
-        this.playerSide = !this.playerSide
-        return
-      }
-      this.displayChess = chessInfo.displayChess //把子组件发射的棋盘储存一下
-      this.manageBoardArray()//整理一下棋盘
-      this.sq = chessInfo.sqSelected
-      let currentPc = this.displayChess[chessInfo.sqSelected]
-      let flag1 = this.playerSide && (currentPc >= 8 && currentPc <= 14) //标识是否为：红方走棋且棋子的值是红方
-      let flag2 = !this.playerSide && currentPc >= 16 // 标识是否为：黑方走棋且棋子的值是黑方
-      if (this.selectedPos === 0 && (flag1 || flag2)) {
-        // 当前棋盘上没有棋子被选中,如果点击的是己方棋子，那么直接选中该子
-        this.selectedPos = chessInfo.sqSelected
-      }
-      else if (this.selectedPos !== 0) {//当前棋盘上有棋子被选中
-        if (flag1 || flag2) {// 点击的是本方棋子
-          this.selectedPos = chessInfo.sqSelected
-        }
-        else {//点击的是对方棋子或空白处
-          this.sqSrc = this.selectedPos
-          this.sqDest = chessInfo.sqSelected
-          let flag3 = this.judgeMove(this.displayChess[this.sqSrc], this.sqSrc, this.sqDest)//用于标记走棋是否合法
-          if (flag3) {
-
-            /*前2种情况是游戏结束时执行*/
-            if (this.displayChess[this.sqDest] === 8) {//如果吃掉红方的帅
-              $('div.tipBox2').attr('style', 'display: flex;')
-              this.bScore += 40
-              this.markBoard()
-            }
-            else if (this.displayChess[this.sqDest] === 16) {//如果吃掉黑方的将
-              $('div.tipBox2').attr('style', 'display: flex;')
-              this.wScore += 40
-              this.markBoard()
-            }
-            else {
-              if (this.displayChess[this.sqDest] & 8) {//终点处是红方棋子
-                this.bScore += 10
-              }
-              else if (this.displayChess[this.sqDest] & 16) {//终点处是黑方棋子
-                this.wScore += 10
-              }
-
-              this.$set(this.displayChess, this.sqDest, this.displayChess[this.sqSrc])//将起点处的棋子移到终点处
-              this.$set(this.displayChess, this.sqSrc, 1)
-              this.playerSide = !this.playerSide
-
-              // console.log('终点棋子:' + this.displayChess[this.sqDest]);
-              // console.log('起点棋子:' + this.displayChess[this.sqSrc]);
-            }
-
-          }
-        }
-
-      }
-      this.judgeKtoK()
-    },
-    drawWithFEN() {
-      let start = this.COORD_XY(3, 3) //51,循环开始处
-      let end = this.COORD_XY(11, 12) //203，循环结束处
-      let imgDomArr = document.querySelectorAll('div.imgBox img')
-      /*tag用作记录文件名关键信息；
-      **row是当前循环索引值i对应的二维坐标的行数,col是列数；
-      **imgIndex用于记录i对应第几个图片*/
-      let tag = '', row = 0, imgIndex = 0, col = 0;
-      for (let i = start; i <= end; i++) {
-        if (this.IN_BOARD(i)) {
-          switch (this.displayChess[i]) {
-            case 8:
-              tag = 'K';
-              break;
-            case 9:
-              tag = 'A';
-              break;
-            case 10:
-              tag = 'B';
-              break;
-            case 11:
-              tag = 'N';
-              break;
-            case 12:
-              tag = 'R';
-              break;
-            case 13:
-              tag = 'C';
-              break;
-            case 14:
-              tag = 'P';
-              break;
-
-            case 16:
-              tag = 'k_';
-              break;
-            case 17:
-              tag = 'a_';
-              break;
-            case 18:
-              tag = 'b_';
-              break;
-            case 19:
-              tag = 'n_';
-              break;
-            case 20:
-              tag = 'r_';
-              break;
-            case 21:
-              tag = 'c_';
-              break;
-            case 22:
-              tag = 'p_';
-              break;
-            case 1:
-              tag = 'UNexist';
-              break;
-            case 0:
-              tag = 'UNexist'
-              break;
-            default:
-              tag = 'UNexist'
-          }
-          row = this.RANK_Y(i)
-          col = this.FILE_X(i)
-          imgIndex = i - 7 * row - 30
-          let imgSrcStr = `/img/chess/${tag}.png`;
-          imgDomArr[imgIndex].src = imgSrcStr // 重新渲染棋子图片
-          /*清空变量*/
-          tag = '';
-          row = 0;
-          imgIndex = 0
-        }
-      }
-
-    },
-    /*将棋子字符转成对应的整数*/
-    FENCharToNum(item) {//将棋子字符转成对应的整数
-      switch (item) {
-        case 'K' : {
-          return 8;
-          break
-        }
-        case 'A':
-          return 9;
-          break
-        case 'B':
-          return 10;
-          break
-        case 'N':
-          return 11;
-          break
-        case 'R':
-          return 12;
-          break
-        case 'C':
-          return 13;
-          break
-        case 'P':
-          return 14;
-          break
-
-        case 'k':
-          return 16;
-          break
-        case 'a':
-          return 17;
-          break
-        case 'b':
-          return 18;
-          break
-        case 'n':
-          return 19;
-          break
-        case 'r':
-          return 20;
-          break
-        case 'c':
-          return 21;
-          break
-        case 'p':
-          return 22;
-          break
-        default:
-          return 1
       }
     },
     /*判断各种棋子的走法*/
@@ -685,7 +601,7 @@ export default {
         if(this.displayChess[sqDest] & 8 && havePcNum === 0) return false
         if(this.displayChess[sqDest] & 16 && havePcNum === 0) return false
 
-          return (this.RANK_Y(sqSrc) === this.RANK_Y(sqDest) || this.FILE_X(sqSrc) === this.FILE_X(sqDest)) //同行同列
+        return (this.RANK_Y(sqSrc) === this.RANK_Y(sqDest) || this.FILE_X(sqSrc) === this.FILE_X(sqDest)) //同行同列
             && ((havePcNum === 1 && flag) || havePcNum === 0)
       }
       else if (pieNum === this.pieceNumber.pawn) {//兵
@@ -710,30 +626,134 @@ export default {
       else
         console.log('走法不合法或点击了空白处');
     },
-    /*判断将帅相对时游戏结束*/
-    judgeKtoK() {
-      let isHavePc_KING = false //用于查询将帅之间是否有棋子格挡
-      for(let i = this.KING1_INDEX + 16; i <= this.KING0_INDEX - 16;) {//查询将帅之间是否有棋子格挡
-        if(this.displayChess[i] >= 8) {
-          isHavePc_KING = true
-          // console.log('在i处有格挡:' + i);
+    drawWithFEN() {
+      let start = this.COORD_XY(3, 3) //51,循环开始处
+      let end = this.COORD_XY(11, 12) //203，循环结束处
+      let imgDomArr = document.querySelectorAll('div.imgBox img')
+      /*tag用作记录文件名关键信息；
+      **row是当前循环索引值i对应的二维坐标的行数,col是列数；
+      **imgIndex用于记录i对应第几个图片*/
+      let tag = '', row = 0, imgIndex = 0, col = 0;
+      for (let i = start; i <= end; i++) {
+        if (this.IN_BOARD(i)) {
+          switch (this.displayChess[i]) {
+            case 8:
+              tag = 'K';
+              break;
+            case 9:
+              tag = 'A';
+              break;
+            case 10:
+              tag = 'B';
+              break;
+            case 11:
+              tag = 'N';
+              break;
+            case 12:
+              tag = 'R';
+              break;
+            case 13:
+              tag = 'C';
+              break;
+            case 14:
+              tag = 'P';
+              break;
+
+            case 16:
+              tag = 'k_';
+              break;
+            case 17:
+              tag = 'a_';
+              break;
+            case 18:
+              tag = 'b_';
+              break;
+            case 19:
+              tag = 'n_';
+              break;
+            case 20:
+              tag = 'r_';
+              break;
+            case 21:
+              tag = 'c_';
+              break;
+            case 22:
+              tag = 'p_';
+              break;
+            case 1:
+              tag = 'UNexist';
+              break;
+            case 0:
+              tag = 'UNexist'
+              break;
+            default:
+              tag = 'UNexist'
+          }
+          row = this.RANK_Y(i)
+          col = this.FILE_X(i)
+          imgIndex = i - 7 * row - 30
+          let imgSrcStr = `/img/chess/${tag}.png`;
+          imgDomArr[imgIndex].src = imgSrcStr // 重新渲染棋子图片
+          /*清空变量*/
+          tag = '';
+          row = 0;
+          imgIndex = 0
+        }
+      }
+
+    },
+    /*将棋子字符转成对应的整数*/
+    FENCharToNum(item) {//将棋子字符转成对应的整数
+      switch (item) {
+        case 'K' : {
+          return 8;
           break
         }
-        i += 16
-      }
-      if(this.FILE_X(this.KING0_INDEX) === this.FILE_X(this.KING1_INDEX) && !isHavePc_KING) {
-        //将帅在同一列且中间无棋子格挡
-        if(this.playerSide) {//红方走
-          this.wScore += 40
-        }
-        else
-          this.bScore += 40
-        // this.playerSide = !this.playerSide
-        this.markBoard()
-        $('div.tipBox2').attr('style', 'display: flex;')
-        // console.log('将帅在同一列');
+        case 'A':
+          return 9;
+          break
+        case 'B':
+          return 10;
+          break
+        case 'N':
+          return 11;
+          break
+        case 'R':
+          return 12;
+          break
+        case 'C':
+          return 13;
+          break
+        case 'P':
+          return 14;
+          break
+
+        case 'k':
+          return 16;
+          break
+        case 'a':
+          return 17;
+          break
+        case 'b':
+          return 18;
+          break
+        case 'n':
+          return 19;
+          break
+        case 'r':
+          return 20;
+          break
+        case 'c':
+          return 21;
+          break
+        case 'p':
+          return 22;
+          break
+        default:
+          return 1
       }
     },
+
     /*校验棋子的终点是否有本方棋子*/
     isHaveSelfPc(pieceVal, sqDest) {
       if (pieceVal & 8 === 1) {
@@ -756,40 +776,46 @@ export default {
         }
       }
     },
-    winSure() {
-      $('div.tipBox2').attr('style', 'display: none;')
-      this.initBoard()
-    },
-    markBoard() {
-      let wScore = this.wScore
-      if (wScore <= 20) this.wMarkMsg = this.markMsgArr[0];
-      else if (wScore <= 30) this.wMarkMsg = this.markMsgArr[1];
-      else if (wScore <= 40) this.wMarkMsg = this.markMsgArr[2];
-      else if (wScore <= 50) this.wMarkMsg = this.markMsgArr[3];
-      else if (wScore <= 60) this.wMarkMsg = this.markMsgArr[4];
-      else if (wScore > 60) this.wMarkMsg = this.markMsgArr[5];
-      else this.wMarkMsg = '暂无评分'
-      let bScore = this.bScore
-
-      if (bScore <= 20) this.bMarkMsg = this.markMsgArr[0];
-      else if (bScore <= 30) this.bMarkMsg = this.markMsgArr[1];
-      else if (bScore <= 40) this.bMarkMsg = this.markMsgArr[2];
-      else if (bScore <= 50) this.bMarkMsg = this.markMsgArr[3];
-      else if (bScore <= 60) this.bMarkMsg = this.markMsgArr[4];
-      else if (bScore > 60) this.bMarkMsg = this.markMsgArr[5];
-      else this.wMarkMsg = '暂无评分'
-    },
-    btnClick() {
-      console.log(-32 % 16);
-    },
     machineClick() {
-      this.isSelectMachine = true
+      this.$confirm('此操作将选择人机对战，电脑执黑棋, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '现在是人机对战!'
+        });
+        this.isSelectMachine = true
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消人机对战'
+        });
+      });
     }
   },
 }
 </script>
 
 <style scoped lang="scss">
+.topLevel {
+  z-index: 1;
+}
+.bottomLevel {
+  z-index: -1;
+}
+.transition-box {
+  margin-bottom: 10px;
+  width: 100%;
+  border-radius: 4px;
+  background-color: #151924D8;
+  text-align: center;
+  color: #fff;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  margin-right: 20px;
+}
   .totalBox {
     position: relative;
     font-size: 2ch;
@@ -811,33 +837,33 @@ export default {
       top: 40%;
       /* width: 2ch; */
       /* transform: translateX(-50%); */
-      font-size: 2.5vw;
+      //font-size: 2.5vw;
       display: flex;
       flex-direction: column;
       /* align-items: baseline; */
       flex-wrap: nowrap;
       width: 1ch;
+      font-size: 2.5vw;
     }
 
     .tipBox2 {
-      display: none;
+      //display: none;
       position: fixed;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(38, 50, 56, .9);
+      width: 78%;
+      height: 79%;
+      //background-color: rgba(1, 1, 1, .9);
       color: white;
       //display: flex;
       justify-content: center;
       //align-items: center;
       flex-wrap: wrap;
       padding: 5px;
-      z-index: 1;
+      //z-index: 1;
       .winMsg {
         display: flex;
         width: 100%;
         justify-content: center;
         align-items: center;
-        font-size: 5vw;
         .scoreBox {
           display: flex;
           margin-bottom: -20vw;

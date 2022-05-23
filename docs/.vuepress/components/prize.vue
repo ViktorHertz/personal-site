@@ -419,8 +419,10 @@ export default {
       cursor: pointer;
       border-radius: 5px;
       margin-right: 5px;
+      color: var(--text-color);
       > i {
         margin-right: 5px;
+        color: var(--text-color);
       }
     }
     > button:hover {
@@ -444,6 +446,10 @@ export default {
       border: 1px solid palevioletred;
       cursor: pointer;
       border-radius: 5px;
+      color: var(--text-color);
+      i {
+        color: var(--text-color);
+      }
     }
     .btn:hover {
       background-color: palevioletred;
