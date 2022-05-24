@@ -16,12 +16,17 @@ header.navbar {
 }
 
 div.custom-block.tip {
-  background-color: $gsTipColor
+  background-color: var(--gs-tip-bg-color)
   border-color: $gsBorderColor
+  color var(--text-color)
 }
 nav-links can-hide .nav-links a {
   color: var(--gs-text-color-1)
 }
+.custom-block .custom-block.right {
+  color var(--text-color)
+}
+
 @media screen and (max-width: 500px) {
   .el-message {
     min-width: 300px !important;

@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@codeciting/vuepress-plugin-echarts": "^0.2.4",
+    "@liradb2000/markdown-it-mermaid": "^0.4.4",
     "@lucky-canvas/vue": "^0.1.10",
     "@maginapp/vuepress-plugin-flowchart": "^1.0.2",
     "@mr-hope/vuepress-plugin-copy-code": "^1.28.3",
@@ -46,10 +47,13 @@
     "markdown-it-disable-url-encode": "^1.0.1",
     "markdown-it-katex": "^2.0.3",
     "markdown-it-mathjax3": "^4.3.1",
+    "markdown-it-mermaid": "^0.2.5",
+    "mermaid": "^9.1.1",
     "moment": "^2.29.1",
     "vuepress-plugin-auto-sidebar": "^2.3.2",
     "vuepress-plugin-flowchart": "^1.5.0",
     "vuepress-plugin-mathjax": "^1.2.8",
+    "vuepress-plugin-mermaidjs": "^1.7.1",
     "vuepress-plugin-one-click-copy": "^1.0.6",
     "vuepress-plugin-player": "^1.1.8",
     "vuepress-plugin-sponsor": "^1.0.0"

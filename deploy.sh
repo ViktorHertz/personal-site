@@ -21,7 +21,7 @@ git config --global user.email "2322134363@qq.com"
 # 填写你需要发布的仓库地址
 git push -f https://gitee.com/gao_sen_g/gaosen.git master
 
-git push -f https://github.com/ViktorHertz/personal-site.git master
+git push -f https://github.com/ViktorHertz/gaosen.git master
 
 #cd -
 

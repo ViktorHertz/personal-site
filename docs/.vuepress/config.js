@@ -1,9 +1,10 @@
 const pluginConf = require('./config/pluginConf')
 const themeConf = require('./config/themeConf')
-const
-    // md = require('markdown-it')(),
-      mathjax3 = require('markdown-it-mathjax3');
+const mathjax3 = require('markdown-it-mathjax3');
 const encode = require('markdown-it-disable-url-encode')
+
+
+require('vuepress-plugin-mermaidjs')
 module.exports = {
   base: '',
   dest: '',
@@ -34,11 +35,16 @@ module.exports = {
       /*waline*/
     ['script',{src: 'https://unpkg.com/@waline/client@v2/dist/waline.js'}],
     ['link',{rel: "stylesheet", href: 'https://unpkg.com/@waline/client@v2/dist/waline.css'}],
+
+    /*mermaid*/
+    ['script',{src: 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js'}],
+    ['script',{},``],
+
   ],
   markdown: {
     lineNumbers: true,
     plugins: {
-      'markdown-it-katex': {},
+      // 'markdown-it-katex': {},
     },
     extendMarkdown: md => {
       md.use(mathjax3);

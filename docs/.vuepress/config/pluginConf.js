@@ -20,14 +20,6 @@ module.exports = {
       },
     ]
   },
-  // '@vuepress-reco/vuepress-plugin-comments': {
-  //   platform: 'gitee',
-  //   // 其他的 Vssue 配置
-  //   owner: 'gao_sen_g',
-  //   repo: 'gaosen',
-  //   clientId: '78fb41184ae1dd78e95ccaed5812da351d2c682f33a3b6e0344af2fa60cc8249',
-  //   clientSecret: '1cab839a8d5620af4ba2868ebcc4995d64116a7f1c4676eaeea2fa349860a334',
-  // },
   '@vuepress/last-updated': {
     transformer: (timestamp, lang) => {
       // 不要忘了安装 moment
@@ -48,17 +40,12 @@ module.exports = {
   'cursor-effects': {
   },
   'vuepress-plugin-flowchart': {
-    openMarker: '```mermaid',
-    closeMarker: '```',
-    scondMarker: 'flowchat',
-    ignoreSecondLine: false
+    // openMarker: '@flowstart',
+    // closeMarker: '@flowend',
+    // scondMarker: 'flowchat',
+    // ignoreSecondLine: false
   },
-  '@maginapp/vuepress-plugin-flowchart': {
-    openMarker: '```mermaid',
-    closeMarker: '```',
-    scondMarker: 'flowchat',
-    ignoreSecondLine: false
-  },
+  'vuepress-plugin-mermaidjs': {},
   /*发现看板娘插件和打赏插件冲突*/
   'vuepress-plugin-sponsor': {
     themeSponsor: "simple",

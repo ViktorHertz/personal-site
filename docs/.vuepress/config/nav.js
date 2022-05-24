@@ -1,10 +1,10 @@
 module.exports = [
-  {text: '专业实验', link: '/curriculum/', icon: 'reco-api'},
+  {text: '课程实验', link: '/curriculum/', icon: 'reco-api'},
   {
     text: '求学之路', link: '/learning/', icon: 'reco-blog',
     items: [
       {text: '前端', link: '/learning/frontEnd/'},
-      {text: 'demo', link: '/learning/demo/'}
+      {text: '建站手册', link: '/learning/建站手册/'}
     ]
   },
   {

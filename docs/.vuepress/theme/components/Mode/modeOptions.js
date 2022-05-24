@@ -22,6 +22,7 @@ const modeOptions = {
     '--gs-bg-color-1': '#eeeeee',
     '--background-color': '#EAEAEAFF',
     '--gs-text-color-1': 'rgba(255, 255, 255, .8)',
+    '--gs-tip-bg-color': '#e6f6e6',
   },
   dark: {
     '--default-color-10': 'rgba(29, 32, 37, 1)',
@@ -46,6 +47,7 @@ const modeOptions = {
     '--background-color': '#1d2025',
     '--gs-bg-color-1': '#252934',
     '--gs-text-color-1': '#242424',
+    '--gs-tip-bg-color': '#003100',
   }
 }
 

@@ -2,7 +2,7 @@
 home: true
 notShowSponsor: true
 ---
-<ShowFont style="display: none" />
+
 
 <script>
 export default {
